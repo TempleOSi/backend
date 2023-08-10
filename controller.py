@@ -20,6 +20,9 @@ class Controller():
         self.app.route('/test')(self.test)
         self.app.route('/getAllGeneral', methods=['GET'])(self.getAllGeneral)
         self.app.route('/addGeneral', methods=['POST'])(self.addGeneral)
+        self.app.route('/getOneGeneral/<id>', methods=['GET'])(self.getOneGeneral)
+        self.app.route('/updateGeneral/<id>', methods=['PUT'])(self.updateGeneral)
+        self.app.route('/deleteGeneral/<id>', methods=['DELETE'])(self.deleteGeneral)
 
     def test(self):
         print("Hello World!")
@@ -28,11 +31,26 @@ class Controller():
     def getAllGeneral(self):
         return jsonify(self.general.find({})), 200
     
+    def getOneGeneral(self, id):
+        return jsonify(self.general.find_by_id(id)), 200
+    
     def addGeneral(self):
         if request.method == "POST":
             title = request.get_json()['title']
             body = request.get_json()['body']
             response = self.general.create({'title': title, 'body': body})
+            return response, 201
+    
+    def updateGeneral(self, id):
+        if request.method == "PUT":
+            title = request.get_json()['title']
+            body = request.get_json()['body']
+            response = self.general.update(id, {'title': title, 'body': body})
+            return response, 201
+        
+    def deleteGeneral(self, id):
+        if request.method == "DELETE":
+            response = self.general.delete(id)
             return response, 201
     
     def run(self):
