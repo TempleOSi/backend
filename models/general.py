@@ -13,7 +13,7 @@ class General(object):
         self.validator = Validator()
         self.db = Database()
         
-        self.collection_name = "test"
+        self.collection_name = "General-Test"
         
         self.fields = {
             "name": "string",
