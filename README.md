@@ -26,13 +26,17 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-6. Create a "config.py" file and enter the following AWS credentials for the DynamoDB environment you will be using:
+6. Create a "db_config.json" file and enter the following MongoDB credentials needed for your remote or local database
 
-```python
-AWS_ACCESS_KEY_ID = "your_access_key_id"
-AWS_SECRET_ACCESS_KEY = "your_secret_access_key"
-AWS_SESSION_TOKEN = "your_session_token"
-REGION_NAME = "region_name"
+```json
+{
+    "db": {
+            "url" : "mongodb://localhost:27017/",
+            "name" :"templeos-dev",
+            "user" :"",
+            "password" :""
+    }
+}
 ```
 
 7. Run the script using the following command:
@@ -40,9 +44,5 @@ REGION_NAME = "region_name"
 ```shell
 python app.py
 ```
-
-8. Access the '/create' route in your browser to create the necessary tables in DynamoDB (Do this just once).
-
-9. Access the DynamoDB service from AWS and manually insert the "pool of questions" found in the 'poolQuestions.py' file.
 
 Done! The backend configuration is ready.
