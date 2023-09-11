@@ -202,7 +202,7 @@ class Controller():
                 # remodel - Indica si se realizó una remodelación bool
                 contenido['remodel']])
             
-            dt = load('dt1.joblib')
+            dt = load('model.joblib')
             
             # Utilizar el modelo
             resultado = dt.predict(datosEntrada.reshape(1, -1))
