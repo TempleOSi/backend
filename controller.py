@@ -58,7 +58,7 @@ class Controller():
         
     def ml_model(self):
         if request.method == "POST":
-            contenido = request.form
+            contenido = request.json
             print(contenido)
             datosEntrada = np.array([
                 # MSSubClass - Tipo de construcción de la vivienda numerico, corresponde a un tipo
