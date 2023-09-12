@@ -10,6 +10,8 @@ from models import general
 from flask_cors import CORS
 from joblib import load
 import numpy as np
+from factory import data_cleaning
+import pandas as pd
 
 class Controller():
 
@@ -58,31 +60,35 @@ class Controller():
         
     def ml_model(self):
         if request.method == "POST":
-            contenido = request.json
-            print(contenido)
+            contenido_sucio = request.json
+            
+            input_df = pd.DataFrame([contenido_sucio])
+            
+            contenido = data_cleaning.clean_data(input_df)
+            
             datosEntrada = np.array([
                 # MSSubClass - Tipo de construcción de la vivienda numerico, corresponde a un tipo
                 20,
                 # MSZoning - Zonificación del vecindario (Residential Low Density) se representa con A, C, FV, I, RH, RL, RP, RM
-                131558.375,
+                contenido['MSZoning'],
                 # LotFrontage - Pies de calle conectados a la propiedad
-                80,
+                contenido['LotFrontage'],
                 # LotArea - Tamaño del lote en pies cuadrados
-                11622,
+                contenido['LotArea'],
                 # Street - Tipo de acceso a la propiedad (Pavimentado) Gravel o Paved
                 181130.5385,
                 # LotShape - Forma del lote (Regular) IR1 2 o 3
-                164754.8184,
+                contenido['LotShape'],
                 # LandContour - Contorno de la propiedad (Nivel llanura) Lvl Bnk HLS Low
                 180183.7468,
                 # Utilities - Servicios públicos disponibles AllPub NoSewr NoSeWa ELO     
                 180950.9568,
                 # LotConfig - Configuración del lote (Dentro) Inside Corner CulDSac FR2 FR3
-                176938.0475,
+                contenido['LotConfig'],
                 # LandSlope - Pendiente del terreno (No especificada) Gtl Mod Sev
                 179956.7996,
                 # Neighborhood - Vecindario (No especificado) Nombre del vecindario
-                145847.08,
+                contenido['Neighborhood'],
                 # Condition1 - Condición de proximidad a varias características (No especificada) cerca de calle principal, locacion importante, etc
                 142475.4815,
                 # Condition2 - Condición de proximidad a varias características (No especificada) si hay más de 1
@@ -90,19 +96,19 @@ class Controller():
                 # BldgType - Tipo de vivienda (No especificado)  Duplex, Townhouse end
                 185763.8074,
                 # HouseStyle - Estilo de la vivienda (No especificado) Un piso, 2, segundo no terminado, etc.
-                175985.478,
+                contenido['HouseStyle'],
                 # OverallQual - Calidad y acabado general de la casa (No especificada) entre 1-10
                 5,
                 # OverallCond - Condición general de la casa (No especificada) entre 1-10
                 6,
                 # YearBuilt - Año de construcción original de la casa
-                1961,
+                contenido['YearBuilt'],
                 # RoofStyle - Estilo del techo (Hip) Flat, Gable, etc.
                 171483.9562,
                 # RoofMatl - Material del techo (No especificado) Metal, Roll, etc.
                 179803.6792,
                 # Exterior1st - Material exterior de la casa (Metal Siding) CBlock, HdBoard, etc.
-                213732.901,
+                contenido['Exterior1st'],
                 # Exterior2nd - Material exterior de la casa (No especificado) si hay mas de uno
                 214432.4603,
                 # MasVnrType - Tipo de revestimiento de mampostería (Brick Face) BrkCmn, Brkace, etc.
@@ -120,7 +126,7 @@ class Controller():
                 # BsmtCond - Condición del sótano (No especificada) Ex, Gd, TA, Fa, Po
                 181492.2277,
                 # BsmtExposure - Exposición del sótano (No especificada) Ex, Gd, TA, Fa, Po
-                165652.2959,
+                contenido['BsmtExposure'],
                 # BsmtFinType1 - Rating de acabado del sótano (No especificado) GLQ, ALQ, BLQ, Rec, LwQ, Unf, NA
                 146889.2481,
                 # BsmtFinSF1 - Área de acabado del sótano tipo 1 en pies cuadrados
@@ -136,7 +142,7 @@ class Controller():
                 # Heating - Tipo de sistema de calefacción  Floor, GasA, GasW, Grav, OthW, Wall
                 182021.1954,
                 # HeatingQC - Calidad y condición del sistema de calefacción  Ex, Gd, TA, Fa, Po
-                3,
+                contenido['HeatingQC'],
                 # CentralAir - Aire acondicionado central  N o Y
                 186186.7099,
                 # Electrical - Sistema eléctrico SBrkr, FuseA, FuseF, FuseP, Mix
@@ -154,7 +160,7 @@ class Controller():
                 # BsmtHalfBath - Número de medios baños en el sótano
                 0,
                 # FullBath - Número de baños completos sobre el nivel del suelo
-                1,
+                contenido['FullBath'],
                 # HalfBath - Número de medios baños sobre el nivel del suelo
                 0,
                 # BedroomAbvGr - Número de dormitorios sobre el nivel del suelo
@@ -170,7 +176,7 @@ class Controller():
                 # Fireplaces - Número de chimeneas
                 0,
                 # GarageType - Tipo de garaje 2Types, Attchd, Basment, BuiltIn, CarPort, Detchd, NA
-                194411.4732,
+                contenido['GarageType'],
                 # GarageYrBlt - Año de construcción del garaje
                 1961,
                 # GarageFinish - Acabado del garaje Fin, RFn, Unf, NA
@@ -186,9 +192,9 @@ class Controller():
                 # PavedDrive - Acceso pavimentado al garaje Y, P, N
                 186433.9739,
                 # WoodDeckSF - Área de plataforma de madera en pies cuadrados
-                140,
+                contenido['WoodDeckSF'],
                 # OpenPorchSF - Área de porche abierto en pies cuadrados
-                0,
+                contenido['OpenPorchSF'],
                 # EnclosedPorch - Área de porche cerrado en pies cuadrados
                 0,
                 # 3SsnPorch - Área de porche de tres estaciones en pies cuadrados
@@ -198,15 +204,17 @@ class Controller():
                 # PoolArea - Área de piscina en pies cuadrados
                 0,
                 # MiscVal - Valor misceláneo de la propiedad dolares
-                contenido['MiscVal'],
+                12500,
                 # remodel - Indica si se realizó una remodelación bool
-                contenido['remodel']])
+                0])
+            
+            datos_lista = datosEntrada.tolist()
             
             dt = load('model.joblib')
             
             # Utilizar el modelo
             resultado = dt.predict(datosEntrada.reshape(1, -1))
-            return jsonify({'resultado': str(resultado[0])}), 200
+            return jsonify({'resultado': str(round(resultado[0],2))}), 200
     
     def run(self):
         self.app.run(host='0.0.0.0', port=5000, debug=True)
