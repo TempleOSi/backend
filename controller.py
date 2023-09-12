@@ -60,7 +60,7 @@ class Controller():
         
     def ml_model(self):
         if request.method == "POST":
-            contenido_sucio = request.json
+            contenido_sucio = request.form
             
             input_df = pd.DataFrame([contenido_sucio])
             
