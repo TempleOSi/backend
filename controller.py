@@ -215,9 +215,6 @@ class Controller():
             # Utilizar el modelo
             resultado = dt.predict(datosEntrada.reshape(1, -1))
             return jsonify({'resultado': str(round(resultado[0],2))}), 200
-            # print(datos_lista)
-            
-            # return jsonify({"resultado":"Si"}), 200
     
     def run(self):
         self.app.run(host='0.0.0.0', port=5000, debug=True)

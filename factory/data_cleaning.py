@@ -1,6 +1,9 @@
 import pandas as pd
 
-means_dict = {'MSZoning': {'All': 74528.0,
+means_dict = {'MSZoning': {'A': 74528.0,
+  'B': 74528.0,
+  'C': 74528.0,
+  'D': 74528.0,
   'FV': 214014.06153846154,
   'RH': 131558.375,
   'RL': 191004.99478714162,
