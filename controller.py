@@ -10,6 +10,8 @@ from models import general
 from flask_cors import CORS
 from joblib import load
 import numpy as np
+from factory import data_cleaning
+import pandas as pd
 
 class Controller():
 
@@ -58,8 +60,12 @@ class Controller():
         
     def ml_model(self):
         if request.method == "POST":
-            contenido = request.json
-            print(contenido)
+            contenido_sucio = request.json
+            
+            input_df = pd.DataFrame([contenido_sucio])
+            
+            contenido = data_cleaning.clean_data(input_df)
+            
             datosEntrada = np.array([
                 # MSSubClass - Tipo de construcción de la vivienda numerico, corresponde a un tipo
                 20,
@@ -202,11 +208,13 @@ class Controller():
                 # remodel - Indica si se realizó una remodelación bool
                 0])
             
+            datos_lista = datosEntrada.tolist()
+            
             dt = load('model.joblib')
             
             # Utilizar el modelo
             resultado = dt.predict(datosEntrada.reshape(1, -1))
-            return jsonify({'resultado': str(resultado[0])}), 200
+            return jsonify({'resultado': str(round(resultado[0],2))}), 200
     
     def run(self):
         self.app.run(host='0.0.0.0', port=5000, debug=True)
