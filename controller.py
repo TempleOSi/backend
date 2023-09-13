@@ -12,6 +12,7 @@ from joblib import load
 import numpy as np
 from factory import data_cleaning
 import pandas as pd
+import os
 
 class Controller():
 
@@ -217,4 +218,4 @@ class Controller():
             return jsonify({'resultado': str(round(resultado[0],2))}), 200
     
     def run(self):
-        self.app.run(host='0.0.0.0', port=5000, debug=True)
+        self.app.run(host='0.0.0.0', port=int(os.environ.get("PORT",8080)), debug=True)
